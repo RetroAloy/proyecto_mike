@@ -63,13 +63,8 @@ public class Inicio {
             ap.analizador = new Lexico(buf);
             ap.siguienteToken();
             
-            
-            ap2.analizador = new Lexico(buf);
-            ap2.siguienteToken();
-            ap2.insertarCola();
-            ap.cola = ap2.cola;
-            
-            System.out.println(ap2.cola);
+            ap.insertarCola();
+            System.out.println(ap.cola);
 
         } catch (IOException e) {
             e.printStackTrace();
