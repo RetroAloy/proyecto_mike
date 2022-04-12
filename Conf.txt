@@ -1,0 +1,71 @@
+package fes.aragon.codigo;
+%%
+%public
+%class Lexico
+%line
+%char
+%column
+%full
+%type Tokens
+%{
+private boolean hayToken=false;
+public boolean getHayToken(){
+	return this.hayToken;
+}
+%}
+%type Tokens
+%init{
+	/*Codigo que se ejecuta en el constructor de la clase*/
+%init}
+%eof{
+	/*Codigo que se ejecuta al terminar el analisis*/
+	this.hayToken=false;
+%eof}
+Espacio= " "
+PuntoComa=";"
+saltoLinea= \n|\r
+%%
+{PuntoComa} {
+	Tokens tok=new Tokens(yytext(),Sym.PUNTOCOMA,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"a" {
+	Tokens tok=new Tokens(yytext(),Sym.A,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"b" {
+	Tokens tok=new Tokens(yytext(),Sym.B,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"c" {
+	Tokens tok=new Tokens(yytext(),Sym.C,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+} 
+
+"d" {
+	Tokens tok=new Tokens(yytext(),Sym.D,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+{saltoLinea} {
+	//Tokens tok=new Tokens(yytext(),Sym.SALTOLINEA,yyline,yycolumn);
+	//this.hayToken=true;
+	//return tok;
+}
+{Espacio} {
+	
+}
+. {
+        String errLex = "Error léxico : '"+yytext()+"' en la línea: "
+		+(yyline+1)+" y columna: "+(yycolumn+1);
+        System.out.println(errLex);
+	this.hayToken=false;
+}
