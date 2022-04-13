@@ -31,7 +31,6 @@ public class Inicio {
     
     public static void main(String[] args) {
         Inicio ap = new Inicio();
-        Inicio ap2 = new Inicio();
         
         
         //Reglas de producción
@@ -64,15 +63,31 @@ public class Inicio {
             ap.siguienteToken();
             
             ap.insertarCola();
-            System.out.println(ap.cola);
+            ap.pilaDeSimbolos();
 
         } catch (IOException e) {
             e.printStackTrace();
         } 
     }
     
-    private void insertarCola 				
-    () {
+    private void pilaDeSimbolos() {
+    	pila_de_simbolos.add(";");
+    	pila_de_simbolos.add("S");
+    	
+
+    	String ultimo_cola = cola.peek();
+    	String primero_pila = pila_de_simbolos.peek();
+    	
+    	if (ultimo_cola == "a" && primero_pila == "S") {
+    		pila_de_simbolos.pop();
+    		pila_de_simbolos.add("B");
+    		pila_de_simbolos.add("A");
+    	} 
+    	
+    	System.out.println(pila_de_simbolos);
+   }
+    
+    private void insertarCola() {
     	if(tokens.getLexema() == Sym.A) {
     		cola.add("a");
     		siguienteToken();
