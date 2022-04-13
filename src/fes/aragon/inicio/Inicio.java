@@ -67,25 +67,45 @@ public class Inicio {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } 
+        } catch (ErrorSintactico e) {
+        	e.printStackTrace();
+        }
     }
     
-    private void pilaDeSimbolos() {
+    private void pilaDeSimbolos() throws ErrorSintactico {
     	pila_de_simbolos.add(";");
     	pila_de_simbolos.add("S");
-    	
-
     	String ultimo_cola = cola.peek();
     	String primero_pila = pila_de_simbolos.peek();
     	
-    	if (ultimo_cola == "a" && primero_pila == "S") {
-    		pila_de_simbolos.pop();
-    		pila_de_simbolos.add("B");
-    		pila_de_simbolos.add("A");
-    	} 
+    	if (primero_pila == "S" && ultimo_cola == "a") {
+    		reglaS(ultimo_cola, primero_pila);
+    	} else if (primero_pila == "S" && ultimo_cola == "b") {
+    		reglaS(ultimo_cola, primero_pila);
+    	} else if (primero_pila == "S" && ultimo_cola == "c") {
+    		throw new ErrorSintactico("Error sintactico"+ " Linea: " + (tokens.getLinea()+1));
+    	} else if (primero_pila == "S" && ultimo_cola == "c") {
+    		throw new ErrorSintactico("Error sintactico"+ " Linea: " +(tokens.getLinea()+1));
+    	}
     	
     	System.out.println(pila_de_simbolos);
    }
+    
+    private void reglaS(String ultimo_cola , String primero_pila) {
+    	//Eliminamos primer elemento de la pila de simbolos
+		pila_de_simbolos.pop();
+		
+		/*
+		 * De acuerdo a la regla de producción de nuestra tabla
+		 * la sustituimos
+		*/
+		pila_de_simbolos.add("B");
+		pila_de_simbolos.add("A");
+		
+		//Leemos el ultimo de la cola y el primero de la pila
+		ultimo_cola = cola.peek();
+		primero_pila = pila_de_simbolos.peek();
+    }
     
     private void insertarCola() {
     	if(tokens.getLexema() == Sym.A) {
@@ -110,17 +130,7 @@ public class Inicio {
     }
     
 
-    private void errorSintactico() {
-        this.error = false;
-        //descartar todo hasta encontrar ;            
-        do {
-            System.out.println(tokens.toString());
-            if (tokens.getLexema() != Sym.PUNTOCOMA) {
-                siguienteToken();
-            }
-        } while (tokens.getLexema() != Sym.PUNTOCOMA && tokens.getLexema() != Sym.EOF);
-
-    }
+    
 
     private void siguienteToken() {
         try {
