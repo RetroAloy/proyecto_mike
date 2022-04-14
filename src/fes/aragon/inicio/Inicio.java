@@ -31,7 +31,7 @@ public class Inicio {
 	private static String ultimo_cola = new String();
 	private static String primero_pila = new String();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ErrorSintactico  {
 		Inicio ap = new Inicio();
 
 		BufferedReader buf;
@@ -40,14 +40,22 @@ public class Inicio {
 
 			ap.analizador = new Lexico(buf);
 			ap.siguienteToken();
-			ap.insertarCola();
-			ap.pilaDeSimbolos();
-
+			
+			do {
+				try {
+					ap.insertarCola();
+					ap.pilaDeSimbolos();
+				}catch (ErrorSintactico e) {
+					ap.cola.clear();
+					ap.pila_de_simbolos.clear();
+					System.out.println(e.getMessage());
+					ap.siguienteToken();
+				}
+			} while (ap.tokens.getLexema() != Sym.EOF);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (ErrorSintactico e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	private void pilaDeSimbolos() throws ErrorSintactico {
@@ -66,7 +74,9 @@ public class Inicio {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				} else if (primero_pila == "S" && ultimo_cola == "d") {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
-				}
+				} else if (primero_pila == "S" && ultimo_cola == ";") {
+					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
+				} 
 
 				if (primero_pila == "A" && ultimo_cola == "a") {
 					reglaA();
@@ -75,6 +85,8 @@ public class Inicio {
 				} else if (primero_pila == "A" && ultimo_cola == "c") {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				} else if (primero_pila == "A" && ultimo_cola == "d") {
+					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
+				} else if (primero_pila == "A" && ultimo_cola == ";") {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				}
 
@@ -90,6 +102,8 @@ public class Inicio {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				} else if (primero_pila == "B" && ultimo_cola == "d") {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
+				} else if (primero_pila == "B" && ultimo_cola == ";") {
+					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				}
 
 				if (primero_pila == "C" && ultimo_cola == "a") {
@@ -100,12 +114,35 @@ public class Inicio {
 					reglaC();
 				} else if (primero_pila == "C" && ultimo_cola == "d") {
 					lambda();
+				} else if (primero_pila == "C" && ultimo_cola == ";") {
+					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				}
+				
+				
 			}
 
 			System.out.println("linea correcta " + (tokens.getLinea() + 1));
-			siguienteToken();
-
+			
+			
+			
+			//Si el lexema es ;
+			if (tokens.getLexema() == Sym.PUNTOCOMA) {
+				//Ir al siguiente token
+				siguienteToken();
+				
+				//Limpio info
+				cola.clear();
+				pila_de_simbolos.clear();
+				
+				//Rellenamos la informacion de la siguiente linea en la cola
+				insertarCola();
+				
+				//Rellenamos la pila
+				pila_de_simbolos.add(";");
+				pila_de_simbolos.add("S");
+				
+			}
+			
 			// Leemos el ultimo de la cola y el primero de la pila
 			ultimo_cola = cola.peek();
 			primero_pila = pila_de_simbolos.peek();
@@ -238,6 +275,18 @@ public class Inicio {
 			}
 		}
 	}
+	
+	private void errorSintactico() {
+        this.error = false;
+        //descartar todo hasta encontrar ;            
+        do {
+            System.out.println("Error sintactico linea " + (tokens.getLinea() + 1 ));
+            if (tokens.getLexema() != Sym.PUNTOCOMA) {
+                siguienteToken();
+            }
+        } while (tokens.getLexema() != Sym.PUNTOCOMA && tokens.getLexema() != Sym.EOF);
+
+    }
 
 	private void siguienteToken() {
 		try {
