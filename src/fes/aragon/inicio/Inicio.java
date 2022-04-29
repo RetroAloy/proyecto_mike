@@ -81,7 +81,9 @@ public class Inicio {
 				if (primero_pila == "A" && ultimo_cola == "a") {
 					reglaA();
 				} else if (primero_pila == "A" && ultimo_cola == "b") {
+					System.out.println(pila_de_simbolos+ "\t" + cola + "\t" + "A:=lambda");
 					lambda();
+					
 				} else if (primero_pila == "A" && ultimo_cola == "c") {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				} else if (primero_pila == "A" && ultimo_cola == "d") {
@@ -114,14 +116,16 @@ public class Inicio {
 					reglaC();
 				} else if (primero_pila == "C" && ultimo_cola == "d") {
 					lambda();
+					System.out.println(pila_de_simbolos + " " + "cola" + " " + "C:=lambda");
 				} else if (primero_pila == "C" && ultimo_cola == ";") {
 					throw new ErrorSintactico("Error sintactico" + " Linea: " + (tokens.getLinea() + 1));
 				}
 				
 				
 			}
-
-			System.out.println("linea correcta " + (tokens.getLinea() + 1));
+			
+			System.out.println(pila_de_simbolos + "\t\t" + cola + "\tAceptar");
+			System.out.println("Linea Correcta " + (tokens.getLinea() + 1));
 			
 			
 			
@@ -151,7 +155,7 @@ public class Inicio {
 	}
 
 	private void reglaS() {
-		System.out.println(pila_de_simbolos);
+		System.out.println(pila_de_simbolos + "\t\t" + cola + "\tS:=AB");
 		// Eliminamos primer elemento de la pila de simbolos
 		pila_de_simbolos.pop();
 
@@ -164,12 +168,13 @@ public class Inicio {
 		// Leemos el ultimo de la cola y el primero de la pila
 		ultimo_cola = cola.peek();
 		primero_pila = pila_de_simbolos.peek();
-
-		// Imprimimos el cambio
-		System.out.println(pila_de_simbolos);
+		
 	}
 
 	private void reglaA() {
+		//Imprimir regla que aplica
+		System.out.println(pila_de_simbolos + "\t" + cola + "\tA:=a");
+		
 		// Eliminamos primer elemento de la pila de simbolos
 		pila_de_simbolos.pop();
 
@@ -182,10 +187,13 @@ public class Inicio {
 		ultimo_cola = cola.peek();
 		primero_pila = pila_de_simbolos.peek();
 
-		System.out.println(pila_de_simbolos);
+		
 	}
 
 	private void reglaB() {
+		//Imprimimos regla que se aplica
+		System.out.println(pila_de_simbolos + "\t\t" + cola + "\tB:=bCd");
+		
 		// Eliminamos primer elemento de la pila de simbolos
 		pila_de_simbolos.pop();
 
@@ -200,10 +208,11 @@ public class Inicio {
 		ultimo_cola = cola.peek();
 		primero_pila = pila_de_simbolos.peek();
 
-		System.out.println(pila_de_simbolos);
 	}
 
 	private void reglaC() {
+		//Imprimimos regla
+		System.out.println(pila_de_simbolos + "\t" + cola + "\tC:=c");
 		// Eliminamos primer elemento de la pila de simbolos
 		pila_de_simbolos.pop();
 
@@ -216,7 +225,6 @@ public class Inicio {
 		ultimo_cola = cola.peek();
 		primero_pila = pila_de_simbolos.peek();
 
-		System.out.println(pila_de_simbolos);
 	}
 
 	private void lambda() {
@@ -232,13 +240,15 @@ public class Inicio {
 		ultimo_cola = cola.peek();
 		primero_pila = pila_de_simbolos.peek();
 
-		System.out.println(pila_de_simbolos);
-
+		
 		// Regresamos
 		return;
 	}
 
 	private void consumir() {
+		//Imprimimos regla consumir
+		System.out.println(pila_de_simbolos + "\t" + cola + "\tconsumir(" + ultimo_cola + ")");
+		
 		// Removemos el simbolo en común tanto en cola como en pila
 		pila_de_simbolos.pop();
 		cola.remove();
@@ -246,9 +256,8 @@ public class Inicio {
 		// Leemos el ultimo de la cola y el primero de la pila
 		ultimo_cola = cola.peek();
 		primero_pila = pila_de_simbolos.peek();
-
-		System.out.println(pila_de_simbolos);
-
+		
+		
 		return;
 	}
 
